@@ -19,12 +19,38 @@ export default function Home() {
   const [showStartCountdown, setShowStartCountdown] = useState(false);
   const [gameActive, setGameActive] = useState(false);
   const [stars, setStars] = useState(0);
+  const [result, setResult] = useState<"win" | "lose" | null>(null);
 
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   const getSequenceLength = () => (mode === "length" ? 5 : 3);
-  const getDifficulty = () => (mode === "speed" ? Math.max(difficulty - 300, 300) : difficulty);
+  const getDifficulty = () =>
+    mode === "speed" ? Math.max(difficulty - 300, 300) : difficulty;
+
+  // --- Camera helpers ---
+  const stopCameraTracks = () => {
+    const media = videoRef.current?.srcObject as MediaStream | null;
+    if (media) {
+      media.getTracks().forEach((t) => t.stop());
+      if (videoRef.current) videoRef.current.srcObject = null;
+    }
+  };
+
+  const exitGame = () => {
+    // hard reset to "menu" state
+    stopCameraTracks();
+    setCameraOn(false);
+    setGameActive(false);
+    setShowStartCountdown(false);
+    setFlashing(false);
+    setSequence([]);
+    setUserInputs([]);
+    setCurrentColor("");
+    setDetectedColor("");
+    setCountdown(null);
+    setResult(null);
+  };
 
   // Start 3-2-1 countdown then GO then flash sequence
   const startGame = () => {
@@ -32,6 +58,7 @@ export default function Home() {
     setDetectedColor("");
     setUserInputs([]);
     setGameActive(true);
+    setResult(null);
 
     let counter = 3;
     setCurrentColor(counter.toString());
@@ -74,7 +101,7 @@ export default function Home() {
 
   // Camera setup for mobile + desktop
   useEffect(() => {
-    if (cameraOn && navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+    if (cameraOn && navigator.mediaDevices?.getUserMedia) {
       navigator.mediaDevices
         .getUserMedia({ video: { facingMode: "environment" } })
         .then((stream) => {
@@ -82,12 +109,11 @@ export default function Home() {
         })
         .catch((err) => {
           console.error("Error accessing camera:", err);
-          alert("Camera access denied or not available.");
         });
     }
 
-    if (!cameraOn && videoRef.current && videoRef.current.srcObject) {
-      (videoRef.current.srcObject as MediaStream).getTracks().forEach((track) => track.stop());
+    if (!cameraOn) {
+      stopCameraTracks();
     }
   }, [cameraOn]);
 
@@ -137,16 +163,13 @@ export default function Home() {
           clearInterval(interval);
           return null;
         }
-        return prev - 1;
+        return (prev || 0) - 1;
       });
     }, 1000);
   };
 
   const confirmColor = () => {
-    if (!detectedColor || detectedColor === "unknown") {
-      alert("No color detected. Try again.");
-      return;
-    }
+    if (!detectedColor || detectedColor === "unknown") return;
 
     const newInputs = [...userInputs, detectedColor];
     setUserInputs(newInputs);
@@ -155,27 +178,20 @@ export default function Home() {
       const correct = sequence.every((c, i) => c === newInputs[i]);
       if (correct) {
         setStars((prev) => prev + 1);
-        if (confirm("Level Complete! Next level?")) {
-          setLevel((prev) => prev + 1);
-          startGame();
-        } else {
-          setGameActive(false);
-        }
+        setResult("win");
       } else {
-        if (confirm("Wrong sequence! Try again?")) {
-          startGame();
-        } else {
-          setGameActive(false);
-        }
+        setResult("lose");
       }
     }
   };
 
-  const progress = Math.round((userInputs.length / sequence.length) * 100);
+  const progress = sequence.length
+    ? Math.round((userInputs.length / sequence.length) * 100)
+    : 0;
 
   return (
     <div className="relative min-h-screen bg-gradient-to-br from-gray-100 via-purple-100 to-blue-100 flex flex-col items-center p-6 overflow-hidden">
-      {/* Scrolly Island Navbar */}
+      {/* Navbar */}
       <nav className="flex space-x-4 mb-6 overflow-x-auto pb-2 scrollbar-hide w-full">
         <div className="flex space-x-4 mx-auto">
           {["mix", "speed", "length"].map((m) => (
@@ -189,7 +205,10 @@ export default function Home() {
               {m.toUpperCase()}
             </button>
           ))}
-          <button className="px-4 py-2 rounded-full bg-green-500 text-white shadow-md" onClick={startGame}>
+          <button
+            className="px-4 py-2 rounded-full bg-green-500 text-white shadow-md"
+            onClick={startGame}
+          >
             START GAME
           </button>
           <button
@@ -200,21 +219,26 @@ export default function Home() {
           </button>
           <button
             className="px-4 py-2 rounded-full bg-gray-500 text-white shadow-md"
-            onClick={() => setGameActive(false)}
+            onClick={exitGame}
           >
             EXIT GAME
           </button>
         </div>
       </nav>
 
-      <h1 className="text-3xl font-bold mb-2 hover:text-purple-700 transition-all">ColourMash</h1>
+      <h1 className="text-3xl font-bold mb-2 hover:text-purple-700 transition-all">
+        ColourMash
+      </h1>
       <p className="mb-2 text-lg">
         Level: {level} ⭐ Stars: {stars}
       </p>
 
       {/* Progress bar */}
       <div className="w-80 h-6 bg-gray-300 rounded-full mb-4">
-        <div className="h-full bg-purple-500 rounded-full transition-all" style={{ width: `${progress}%` }} />
+        <div
+          className="h-full bg-purple-500 rounded-full transition-all"
+          style={{ width: `${progress}%` }}
+        />
       </div>
 
       {/* Flash display / 3-2-1 countdown */}
@@ -249,7 +273,9 @@ export default function Home() {
       {gameActive && !flashing && !showStartCountdown && (
         <div className="flex flex-col items-center space-y-2">
           {countdown !== null ? (
-            <p className="text-xl font-bold text-blue-600">Hold your card… Detecting in {countdown}s</p>
+            <p className="text-xl font-bold text-blue-600">
+              Hold your card… Detecting in {countdown}s
+            </p>
           ) : (
             <>
               <p className="text-lg">
@@ -277,9 +303,70 @@ export default function Home() {
         </div>
       )}
 
+      {/* RESULT MODAL */}
+      {result && (
+        <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-2xl shadow-xl text-center">
+            {result === "win" ? (
+              <>
+                <h2 className="text-2xl font-bold text-green-600 mb-4">
+                  🎉 Congrats! Level Complete 🎉
+                </h2>
+                <div className="flex space-x-4 justify-center">
+                  <button
+                    className="px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md"
+                    onClick={() => {
+                      setLevel((prev) => prev + 1);
+                      setResult(null);
+                      startGame();
+                    }}
+                  >
+                    Next Level
+                  </button>
+                  <button
+                    className="px-4 py-2 bg-gray-500 text-white rounded-lg shadow-md"
+                    onClick={exitGame}
+                  >
+                    Exit
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                <h2 className="text-2xl font-bold text-red-600 mb-4">
+                  ❌ Sorry! Wrong Sequence ❌
+                </h2>
+                <div className="flex space-x-4 justify-center">
+                  <button
+                    className="px-4 py-2 bg-purple-500 text-white rounded-lg shadow-md"
+                    onClick={() => {
+                      setResult(null);
+                      startGame();
+                    }}
+                  >
+                    Try Again
+                  </button>
+                  <button
+                    className="px-4 py-2 bg-gray-500 text-white rounded-lg shadow-md"
+                    onClick={exitGame}
+                  >
+                    Exit
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+
       <style jsx>{`
-        .scrollbar-hide::-webkit-scrollbar { display: none; }
-        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+        .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
       `}</style>
     </div>
   );

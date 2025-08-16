@@ -488,8 +488,8 @@ video {
   --tw-backdrop-saturate:  ;
   --tw-backdrop-sepia:  ;
 }
-.absolute {
-  position: absolute;
+.fixed {
+  position: fixed;
 }
 .relative {
   position: relative;
@@ -497,8 +497,8 @@ video {
 .inset-0 {
   inset: 0px;
 }
-.-z-10 {
-  z-index: -10;
+.z-50 {
+  z-index: 50;
 }
 .mx-auto {
   margin-left: auto;
@@ -512,9 +512,6 @@ video {
 }
 .mb-6 {
   margin-bottom: 1.5rem;
-}
-.block {
-  display: block;
 }
 .flex {
   display: flex;
@@ -537,14 +534,8 @@ video {
 .w-80 {
   width: 20rem;
 }
-.w-6 {
-  width: 1.5rem;
-}
 .w-full {
   width: 100%;
-}
-.transform {
-  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 @keyframes pulse {
 
@@ -557,9 +548,6 @@ video {
 }
 .flex-col {
   flex-direction: column;
-}
-.flex-wrap {
-  flex-wrap: wrap;
 }
 .items-center {
   align-items: center;
@@ -627,9 +615,12 @@ video {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
 }
-.bg-purple-400 {
+.bg-black {
   --tw-bg-opacity: 1;
-  background-color: rgb(192 132 252 / var(--tw-bg-opacity));
+  background-color: rgb(0 0 0 / var(--tw-bg-opacity));
+}
+.bg-opacity-60 {
+  --tw-bg-opacity: 0.6;
 }
 .bg-gradient-to-br {
   background-image: linear-gradient(to bottom right, var(--tw-gradient-stops));
@@ -660,6 +651,9 @@ video {
 .pb-2 {
   padding-bottom: 0.5rem;
 }
+.text-center {
+  text-align: center;
+}
 .text-3xl {
   font-size: 1.875rem;
   line-height: 2.25rem;
@@ -675,6 +669,10 @@ video {
 .text-xl {
   font-size: 1.25rem;
   line-height: 1.75rem;
+}
+.text-2xl {
+  font-size: 1.5rem;
+  line-height: 2rem;
 }
 .font-bold {
   font-weight: 700;
@@ -694,11 +692,13 @@ video {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
 }
-.opacity-30 {
-  opacity: 0.3;
+.text-green-600 {
+  --tw-text-opacity: 1;
+  color: rgb(22 163 74 / var(--tw-text-opacity));
 }
-.opacity-40 {
-  opacity: 0.4;
+.text-red-600 {
+  --tw-text-opacity: 1;
+  color: rgb(220 38 38 / var(--tw-text-opacity));
 }
 .shadow-lg {
   --tw-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
@@ -708,6 +708,11 @@ video {
 .shadow-md {
   --tw-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   --tw-shadow-colored: 0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+.shadow-xl {
+  --tw-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --tw-shadow-colored: 0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color);
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
 .transition-all {
