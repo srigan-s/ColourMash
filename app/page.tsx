@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import Head from "next/head"; 
+
 
 const colors = ["red", "green", "blue"];
 type Mode = "speed" | "length" | "mix";
@@ -160,6 +162,10 @@ export default function Home() {
 
   return (
     <div className="scroll-smooth">
+      <Head>
+        <title>ColourMash - Pattern Therapy</title>
+      </Head>
+
       {/* ================= Landing Section ================= */}
       <section className="flex flex-col items-center justify-center text-center min-h-screen px-6 animate-fadeIn">
         <h1 className="text-5xl md:text-6xl font-bold mb-6 animate-pulse">
