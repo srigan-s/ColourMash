@@ -1329,6 +1329,16 @@ eval("(()=>{\n    \"use strict\";\n    var e = {\n        211: (e)=>{\n         
 
 /***/ }),
 
+/***/ "(ssr)/./node_modules/next/dist/compiled/client-only/index.js":
+/*!**************************************************************!*\
+  !*** ./node_modules/next/dist/compiled/client-only/index.js ***!
+  \**************************************************************/
+/***/ (() => {
+
+eval("//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiIoc3NyKS8uL25vZGVfbW9kdWxlcy9uZXh0L2Rpc3QvY29tcGlsZWQvY2xpZW50LW9ubHkvaW5kZXguanMiLCJzb3VyY2VSb290IjoiIn0=\n//# sourceURL=webpack-internal:///(ssr)/./node_modules/next/dist/compiled/client-only/index.js\n");
+
+/***/ }),
+
 /***/ "(ssr)/./node_modules/next/dist/compiled/css.escape/css.escape.js":
 /*!******************************************************************!*\
   !*** ./node_modules/next/dist/compiled/css.escape/css.escape.js ***!

@@ -26,7 +26,7 @@ export default function Home() {
   const getSequenceLength = () => (mode === "length" ? 5 : 3);
   const getDifficulty = () => (mode === "speed" ? Math.max(difficulty - 300, 300) : difficulty);
 
-  // Start 3-2-1 countdown then flash sequence
+  // Start 3-2-1 countdown then GO then flash sequence
   const startGame = () => {
     setShowStartCountdown(true);
     setDetectedColor("");
@@ -34,14 +34,20 @@ export default function Home() {
     setGameActive(true);
 
     let counter = 3;
+    setCurrentColor(counter.toString());
     const countdownInterval = setInterval(() => {
-      setCurrentColor(counter.toString());
       counter--;
-      if (counter === 0) {
+      if (counter > 0) {
+        setCurrentColor(counter.toString());
+      } else if (counter === 0) {
+        setCurrentColor("GO!");
+      } else {
         clearInterval(countdownInterval);
-        setShowStartCountdown(false);
-        setCurrentColor("");
-        beginSequence();
+        setTimeout(() => {
+          setShowStartCountdown(false);
+          setCurrentColor("");
+          beginSequence();
+        }, 800);
       }
     }, 1000);
   };
@@ -168,35 +174,37 @@ export default function Home() {
   const progress = Math.round((userInputs.length / sequence.length) * 100);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-100 via-purple-100 to-blue-100 flex flex-col items-center p-6">
-      {/* Navbar */}
-      <nav className="flex flex-wrap space-x-4 mb-6">
-        {["mix", "speed", "length"].map((m) => (
-          <button
-            key={m}
-            className={`px-4 py-2 rounded-lg font-semibold ${
-              mode === m ? "bg-blue-500 text-white" : "bg-white text-gray-800 shadow-md"
-            }`}
-            onClick={() => setMode(m as Mode)}
-          >
-            {m.toUpperCase()}
+    <div className="relative min-h-screen bg-gradient-to-br from-gray-100 via-purple-100 to-blue-100 flex flex-col items-center p-6 overflow-hidden">
+      {/* Scrolly Island Navbar */}
+      <nav className="flex space-x-4 mb-6 overflow-x-auto pb-2 scrollbar-hide w-full">
+        <div className="flex space-x-4 mx-auto">
+          {["mix", "speed", "length"].map((m) => (
+            <button
+              key={m}
+              className={`px-4 py-2 rounded-full font-semibold whitespace-nowrap shadow-md transition-all duration-300 ${
+                mode === m ? "bg-blue-500 text-white" : "bg-white text-gray-800"
+              }`}
+              onClick={() => setMode(m as Mode)}
+            >
+              {m.toUpperCase()}
+            </button>
+          ))}
+          <button className="px-4 py-2 rounded-full bg-green-500 text-white shadow-md" onClick={startGame}>
+            START GAME
           </button>
-        ))}
-        <button className="px-4 py-2 rounded-lg bg-green-500 text-white shadow-md" onClick={startGame}>
-          START GAME
-        </button>
-        <button
-          className="px-4 py-2 rounded-lg bg-red-500 text-white shadow-md"
-          onClick={() => setCameraOn((prev) => !prev)}
-        >
-          {cameraOn ? "TURN CAMERA OFF" : "TURN CAMERA ON"}
-        </button>
-        <button
-          className="px-4 py-2 rounded-lg bg-gray-500 text-white shadow-md"
-          onClick={() => setGameActive(false)}
-        >
-          EXIT GAME
-        </button>
+          <button
+            className="px-4 py-2 rounded-full bg-red-500 text-white shadow-md"
+            onClick={() => setCameraOn((prev) => !prev)}
+          >
+            {cameraOn ? "TURN CAMERA OFF" : "TURN CAMERA ON"}
+          </button>
+          <button
+            className="px-4 py-2 rounded-full bg-gray-500 text-white shadow-md"
+            onClick={() => setGameActive(false)}
+          >
+            EXIT GAME
+          </button>
+        </div>
       </nav>
 
       <h1 className="text-3xl font-bold mb-2 hover:text-purple-700 transition-all">ColourMash</h1>
@@ -268,6 +276,11 @@ export default function Home() {
           )}
         </div>
       )}
+
+      <style jsx>{`
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+      `}</style>
     </div>
   );
 }
