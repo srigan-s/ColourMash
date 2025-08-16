@@ -1,0 +1,65 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background: linear-gradient(135deg, #f0f0f0, #d0f0ff);
+}
+
+button {
+  padding: 10px 20px;
+  margin: 10px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  background: #4a90e2;
+  color: white;
+}
+
+button:hover {
+  background: #357abd;
+  transform: translateY(-2px);
+}
+
+.progress-container {
+  width: 80%;
+  height: 20px;
+  background: #eee;
+  border-radius: 10px;
+  margin: 20px auto;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background: #4a90e2;
+  width: 0%;
+  transition: width 0.3s ease;
+  border-radius: 10px;
+}
+
+.card-display {
+  width: 120px;
+  height: 120px;
+  margin: 20px auto;
+  border-radius: 20px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+}
+
+.camera-container {
+  position: relative;
+  display: inline-block;
+  margin: 20px auto;
+}
+
+.countdown {
+  font-size: 24px;
+  font-weight: bold;
+  color: #4a90e2;
+  margin: 10px 0;
+}
