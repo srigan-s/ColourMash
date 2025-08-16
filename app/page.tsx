@@ -199,7 +199,7 @@ export default function Home() {
         </button>
       </nav>
 
-      <h1 className="text-3xl font-bold mb-2 hover:text-purple-700 transition-all">Colour Memory Game</h1>
+      <h1 className="text-3xl font-bold mb-2 hover:text-purple-700 transition-all">ColourMash</h1>
       <p className="mb-2 text-lg">
         Level: {level} ⭐ Stars: {stars}
       </p>
