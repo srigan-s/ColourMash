@@ -1,4 +1,4 @@
-"use client";
+"use client"; //commiting for fun
 
 import { useState, useEffect, useRef } from "react";
 import Head from "next/head"; 
