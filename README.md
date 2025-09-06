@@ -1,5 +1,5 @@
 # ColourMash - Pattern Therapy Game 
-
+ 
 ## Overview
 **ColourMash** is an interactive web application designed to help individuals with Alzheimer’s and dementia improve memory and cognitive skills through pattern recognition. The game involves users following color sequences and confirming their responses using physical cards detected through their device’s camera.
 
